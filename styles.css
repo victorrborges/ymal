@@ -1,0 +1,26 @@
+header {
+  background: #e0e0e0;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0 8px;
+  cursor: pointer;
+  width: auto;
+  display: inline-grid;
+}
+
+section {
+  overflow: hidden;
+  background: #e0e0e0;
+  border-radius: 10px;
+  padding: 0 20px;
+  margin: 20px 0 8px;
+}
+
+.motion-div {
+  display: inline-grid;
+}
+
+.motion-div-content {
+  display: flex;
+  overflow-y: scroll;
+}
