@@ -3,37 +3,80 @@ import { StyleSheet, TouchableHighlight } from "react-native";
 import { RecommendationObject } from "../types/types";
 import { Text, View } from "./Themed";
 import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function RecommendationsItem({
   item,
 }: {
   item: RecommendationObject;
 }) {
-  const { setRecommendation } = useRecommendationsContext();
+  const { recommendation, setRecommendation } = useRecommendationsContext();
+  const [expanded, setExpanded] = useState(recommendation?.url === item.url);
+
+  useEffect(
+    () => setExpanded(recommendation?.url === item.url),
+    [recommendation]
+  );
 
   return (
-    <TouchableHighlight onPress={() => setRecommendation(item)}>
-      <View style={styles.item}>
-        <Text style={styles.title}>{item.name}</Text>
-        {item.artist ? (
-          <Text style={styles.artistName}>{item.artist.name}</Text>
-        ) : (
-          <Text style={styles.artistPlaceholder}>Artist</Text>
-        )}
-      </View>
+    <TouchableHighlight
+      style={styles.item}
+      onPress={() =>
+        expanded ? setRecommendation(undefined) : setRecommendation(item)
+      }
+    >
+      <>
+        <motion.header
+          initial={false}
+          animate={{ backgroundColor: expanded ? "#E0E0E0" : "#878787" }}
+        >
+          <Text style={styles.title}>{item.name}</Text>
+          {item.artist ? (
+            <Text style={styles.artistName}>{item.artist.name}</Text>
+          ) : (
+            <Text style={styles.artistPlaceholder}>Artist</Text>
+          )}
+        </motion.header>
+        <AnimatePresence initial={false}>
+          {expanded && (
+            <motion.section
+              key="content"
+              initial="collapsed"
+              animate="open"
+              exit="collapsed"
+              variants={{
+                open: { opacity: 1, height: "auto" },
+                collapsed: { opacity: 0, height: 0 },
+              }}
+              transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+            >
+              <View style={styles.content}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.name}</Text>
+                {item.artist ? (
+                  <Text style={styles.artistName}>{item.artist.name}</Text>
+                ) : (
+                  <Text style={styles.artistPlaceholder}>Artist</Text>
+                )}
+              </View>
+            </motion.section>
+          )}
+        </AnimatePresence>
+      </>
     </TouchableHighlight>
   );
 }
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: "#E0E0E0",
-    borderRadius: 10,
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    marginTop: 20,
-    position: "relative"
+    position: "relative",
+    width: "100%",
+  },
+  content: {
+    paddingVertical: 20,
+    backgroundColor: "transparent"
   },
   title: {
     fontSize: 30,

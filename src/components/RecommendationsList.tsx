@@ -2,7 +2,6 @@ import { StyleSheet, SafeAreaView, FlatList, TouchableHighlight } from "react-na
 
 import { RecommendationObject } from "../types/types";
 import { View } from "./Themed";
-import RecommendationsItemAnimated from "./RecommendationsItemAnimated";
 import RecommendationsItem from "./RecommendationsItem";
 
 export default function RecommendationsList({
@@ -11,7 +10,7 @@ export default function RecommendationsList({
   items: RecommendationObject[];
 }) {
   const renderItem = ({ item }: { item: RecommendationObject }) => (
-    <RecommendationsItemAnimated item={item} />
+    <RecommendationsItem item={item} />
   );
 
   return (
