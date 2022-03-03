@@ -1,12 +1,11 @@
 import { StyleSheet, TouchableHighlight } from "react-native";
-
+import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
 import {
   getArtistRecommendations,
   getTracksRecommendations,
 } from "../services/LastFMAPIProvider";
 import { LastFMSearchObject } from "../types/types";
 import { Text, View } from "./Themed";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
 
 export default function SearchResultsItem({
   item,

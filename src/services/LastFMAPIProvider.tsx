@@ -1,15 +1,14 @@
 import LastFM from "last-fm";
 import { LAST_FM_API_KEY } from "react-native-dotenv";
-import { formatSearchObjects } from "../utils/formatter";
-
 import {
-  SearchDataObject,
-  ErrorSearchObject,
   ArtistsRecommendationsDataObject,
-  TracksRecommendationsDataObject,
+  ErrorSearchObject,
   LastFMSearchObject,
+  SearchDataObject,
   TrackSearchObject,
+  TracksRecommendationsDataObject,
 } from "../types/types";
+import { formatSearchObjects } from "../utils/formatter";
 
 const lastfm = new LastFM(LAST_FM_API_KEY);
 
@@ -21,12 +20,15 @@ export const getSearchResults = (search: string, callback: Function) => {
       else {
         const result = formatSearchObjects(data);
         callback(result);
-      };
+      }
     }
   );
 };
 
-export const getArtistRecommendations = (artist: LastFMSearchObject, callback: Function) => {
+export const getArtistRecommendations = (
+  artist: LastFMSearchObject,
+  callback: Function
+) => {
   lastfm.artistSimilar(
     { name: artist.name, limit: 10 },
     (err: ErrorSearchObject, data: ArtistsRecommendationsDataObject) => {
@@ -36,9 +38,16 @@ export const getArtistRecommendations = (artist: LastFMSearchObject, callback: F
   );
 };
 
-export const getTracksRecommendations = (track: LastFMSearchObject, callback: Function) => {
+export const getTracksRecommendations = (
+  track: LastFMSearchObject,
+  callback: Function
+) => {
   lastfm.trackSimilar(
-    { name: track.name, artistName: (track as unknown as TrackSearchObject).artistName, limit: 10 },
+    {
+      name: track.name,
+      artistName: (track as unknown as TrackSearchObject).artistName,
+      limit: 10,
+    },
     (err: ErrorSearchObject, data: TracksRecommendationsDataObject) => {
       if (err) console.error(err);
       else callback(data.track);

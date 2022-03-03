@@ -1,14 +1,13 @@
 import {
-  NavigationContainer,
-  DefaultTheme,
   DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
-
-import NotFoundScreen from "../screens/NotFoundScreen";
 import HomeScreen from "../screens/HomeScreen";
+import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 

@@ -1,10 +1,9 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { StyleSheet, TouchableHighlight } from "react-native";
-
+import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
 import { RecommendationObject } from "../types/types";
 import { Text, View } from "./Themed";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
 
 export default function RecommendationsItem({
   item,
