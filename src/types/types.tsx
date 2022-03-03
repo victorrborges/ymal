@@ -43,6 +43,19 @@ export type RecommendationObject = {
   playcount?: number;
 };
 
+export type InfoObject = {
+  type: string,
+  images: string[],
+  listeners: number,
+  tags: string[],
+  name: string,
+  duration?: number,
+  albumName?: string,
+  artistName?: string,
+  similar?: any[],
+  summary?: string,
+}
+
 type ArtistForTracksRecommendationsObject = {
   name: string;
   mbid: string;

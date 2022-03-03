@@ -48,7 +48,6 @@ export default function SearchResultsList() {
                 showsHorizontalScrollIndicator={false}
               />
             </SafeAreaView>
-            )
           </View>
         </motion.div>
       )}

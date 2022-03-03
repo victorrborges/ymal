@@ -1,8 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableHighlight } from "react-native";
+import { StyleSheet, Image, TouchableHighlight } from "react-native";
 import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
-import { RecommendationObject } from "../types/types";
+import {
+  getArtistInfo,
+  getArtistTopTrack,
+  getTracksInfo,
+} from "../services/LastFMAPIProvider";
+import { InfoObject, RecommendationObject } from "../types/types";
 import { Text, View } from "./Themed";
 
 export default function RecommendationsItem({
@@ -12,6 +17,30 @@ export default function RecommendationsItem({
 }) {
   const { recommendation, setRecommendation } = useRecommendationsContext();
   const [expanded, setExpanded] = useState(recommendation?.url === item.url);
+  const [info, setInfo] = useState<InfoObject>();
+  const [image, setImage] = useState<string>();
+  const [topTrack, setTopTrack] = useState<InfoObject>();
+
+  const fetchInfo = item.artist ? getTracksInfo : getArtistInfo;
+
+  useEffect(() => {
+    console.log(image);
+  }, [image]);
+
+  useEffect(() => {
+    topTrack && setImage(topTrack.images[topTrack.images.length - 1]);
+  }, [topTrack]);
+
+  useEffect(() => {
+    info &&
+      (info.type === "track"
+        ? setImage(info.images[info.images.length - 1])
+        : getArtistTopTrack(item, setTopTrack));
+  }, [info]);
+
+  useEffect(() => {
+    expanded && fetchInfo(item, setInfo);
+  }, [expanded]);
 
   useEffect(
     () => setExpanded(recommendation?.url === item.url),
@@ -51,8 +80,7 @@ export default function RecommendationsItem({
               transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
             >
               <View style={styles.content}>
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.title}>{item.name}</Text>
+                {image && <Image style={styles.image} source={{uri: image}}></Image>}
                 <Text style={styles.title}>{item.name}</Text>
                 {item.artist ? (
                   <Text style={styles.artistName}>{item.artist.name}</Text>
@@ -75,7 +103,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingVertical: 20,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
   title: {
     fontSize: 30,
@@ -95,4 +123,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: "#666666",
   },
+  image: {
+    width: "80vw",
+    height: "80vw",
+    borderRadius: 10,
+    marginTop: 5,
+    marginBottom: 20
+  }
 });
