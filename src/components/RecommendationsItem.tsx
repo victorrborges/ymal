@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { StyleSheet, Image, TouchableHighlight } from "react-native";
+import { StyleSheet, TouchableHighlight } from "react-native";
 import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
 import {
   getArtistInfo,
@@ -8,7 +8,9 @@ import {
   getTracksInfo,
 } from "../services/LastFMAPIProvider";
 import { InfoObject, RecommendationObject } from "../types/types";
+import ArtistItem from "./ArtistItem";
 import { Text, View } from "./Themed";
+import TrackItem from "./TrackItem";
 
 export default function RecommendationsItem({
   item,
@@ -23,9 +25,6 @@ export default function RecommendationsItem({
 
   const fetchInfo = item.artist ? getTracksInfo : getArtistInfo;
 
-  useEffect(() => {
-    console.log(image);
-  }, [image]);
 
   useEffect(() => {
     topTrack && setImage(topTrack.images[topTrack.images.length - 1]);
@@ -80,13 +79,13 @@ export default function RecommendationsItem({
               transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
             >
               <View style={styles.content}>
-                {image && <Image style={styles.image} source={{uri: image}}></Image>}
-                <Text style={styles.title}>{item.name}</Text>
-                {item.artist ? (
-                  <Text style={styles.artistName}>{item.artist.name}</Text>
-                ) : (
-                  <Text style={styles.artistPlaceholder}>Artist</Text>
-                )}
+                {info?.type === "track" ? (
+                  <TrackItem item={info} image={image} />
+                ) : info?.type === "artist" ? (
+                  <>
+                    <ArtistItem item={info} image={image} topTrack={topTrack} />
+                  </>
+                ) : null}
               </View>
             </motion.section>
           )}
@@ -123,11 +122,4 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: "#666666",
   },
-  image: {
-    width: "80vw",
-    height: "80vw",
-    borderRadius: 10,
-    marginTop: 5,
-    marginBottom: 20
-  }
 });
