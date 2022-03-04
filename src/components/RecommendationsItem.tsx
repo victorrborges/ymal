@@ -27,13 +27,13 @@ export default function RecommendationsItem({
 
 
   useEffect(() => {
-    topTrack && setImage(topTrack.images[topTrack.images.length - 1]);
+    topTrack && topTrack.images && setImage(topTrack.images[topTrack.images.length - 1]);
   }, [topTrack]);
 
   useEffect(() => {
     info &&
       (info.type === "track"
-        ? setImage(info.images[info.images.length - 1])
+        ? info.images && setImage(info.images[info.images.length - 1])
         : getArtistTopTrack(item, setTopTrack));
   }, [info]);
 
