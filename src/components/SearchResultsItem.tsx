@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableHighlight } from "react-native";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
+import { useRecommendations } from "../hooks/useRecommendations";
 import {
   getArtistRecommendations,
   getTracksRecommendations,
@@ -12,7 +12,7 @@ export default function SearchResultsItem({
 }: {
   item: LastFMSearchObject;
 }) {
-  const { setRecommendations } = useRecommendationsContext();
+  const { setRecommendations } = useRecommendations();
 
   const onItemPress =
     item.type === "artist"

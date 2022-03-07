@@ -5,45 +5,73 @@ import SearchForm from "../components/SearchForm";
 import SearchResultsList from "../components/SearchResultsList";
 import SubHeader from "../components/SubHeader";
 import { View } from "../components/Themed";
-import { MyRecommendationsContext } from "../hooks/useRecommendationsContext";
-import { MySearchResultsContext } from "../hooks/useSearchResultsContext";
+import { MyAuthentication } from "../hooks/useAuth";
+import { MyRecommendations } from "../hooks/useRecommendations";
+import { MySearchResults } from "../hooks/useSearchResults";
+import { MyBookmarks } from "../hooks/useBookmarks";
 import { RootStackScreenProps } from "../types/types";
+import { auth, getUserId } from "../services/AuthenticationProvider";
+import { getBookmarks } from "../services/BookmarksProvider";
 
 export default function HomeScreen({}: RootStackScreenProps<"Home">) {
+  const [authenticated, setAuthenticated] = useState(false);
+  const [userId, setUserId] = useState();
+
   const [searchResults, setSearchResults] = useState();
   const [recommendations, setRecommendations] = useState();
-  const [recommendation, setRecommendation] = useState();
+
+  const [bookmarks, setBookmarks] = useState();
 
   useEffect(() => {
-    setRecommendations(undefined);
-  }, [searchResults]);
+    userId && getBookmarks(userId, setBookmarks);
+  }, [userId]);
+
+  useEffect(() => {
+    authenticated && getUserId(setUserId);
+  }, [authenticated]);
+
+  useEffect(() => {
+    auth(setAuthenticated);
+  }, []);
 
   return (
-    <MyRecommendationsContext.Provider
+    <MyAuthentication.Provider
       value={{
-        recommendations,
-        setRecommendations,
-        recommendation,
-        setRecommendation,
+        authenticated,
+        userId,
+        setUserId,
       }}
     >
-      <View style={styles.container}>
-        <MySearchResultsContext.Provider
-          value={{
-            searchResults,
-            setSearchResults,
-          }}
-        >
-          <SearchForm />
+      <MyRecommendations.Provider
+        value={{
+          recommendations,
+          setRecommendations,
+        }}
+      >
+        <View style={styles.container}>
+          <MySearchResults.Provider
+            value={{
+              searchResults,
+              setSearchResults,
+            }}
+          >
+            <SearchForm />
 
-          <SearchResultsList />
-        </MySearchResultsContext.Provider>
+            <SearchResultsList />
+          </MySearchResults.Provider>
 
-        <SubHeader />
+          <SubHeader />
 
-        <RecommendationsList />
-      </View>
-    </MyRecommendationsContext.Provider>
+          <MyBookmarks.Provider
+            value={{
+              bookmarks,
+            }}
+          >
+            <RecommendationsList />
+          </MyBookmarks.Provider>
+        </View>
+      </MyRecommendations.Provider>
+    </MyAuthentication.Provider>
   );
 }
 

@@ -17,7 +17,7 @@ export default function ArtistItem({
         <>
           <Image style={styles.image} source={{ uri: image }}></Image>
           {topTrack && (
-            <Text style={styles.subtitle}>Top track: {topTrack.name} </Text>
+            <Text style={styles.subtitle}>Top Track: {topTrack.name} </Text>
           )}
         </>
       )}

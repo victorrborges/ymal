@@ -1,7 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { FontAwesome } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableHighlight } from "react-native";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
+import { Pressable, StyleSheet, TouchableHighlight } from "react-native";
+import { useRecommendation } from "../hooks/useRecommendation";
+import { addBookmark, deleteBookmark } from "../services/BookmarksProvider";
+import { useAuthentication } from "../hooks/useAuth";
+import { useBookmarks } from "../hooks/useBookmarks";
 import {
   getArtistInfo,
   getArtistTopTrack,
@@ -17,17 +21,30 @@ export default function RecommendationsItem({
 }: {
   item: RecommendationObject;
 }) {
-  const { recommendation, setRecommendation } = useRecommendationsContext();
+  const { authenticated, userId } = useAuthentication();
+  const { recommendation, setRecommendation } = useRecommendation();
+  const { bookmarks } = useBookmarks();
   const [expanded, setExpanded] = useState(recommendation?.url === item.url);
   const [info, setInfo] = useState<InfoObject>();
   const [image, setImage] = useState<string>();
   const [topTrack, setTopTrack] = useState<InfoObject>();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false); 
+
+  useEffect(() => {
+    bookmarks && setIsBookmarked(bookmarks.map((b) => b.bookmark.url).includes(item.url))
+  }, [bookmarks])
+
+  const deleteBookmarkWrapper = () => {
+    const bookmark = bookmarks?.find((b) => b.bookmark.url === item.url);
+    deleteBookmark(bookmark?.id)
+  }
 
   const fetchInfo = item.artist ? getTracksInfo : getArtistInfo;
 
-
   useEffect(() => {
-    topTrack && topTrack.images && setImage(topTrack.images[topTrack.images.length - 1]);
+    topTrack &&
+      topTrack.images &&
+      setImage(topTrack.images[topTrack.images.length - 1]);
   }, [topTrack]);
 
   useEffect(() => {
@@ -56,13 +73,26 @@ export default function RecommendationsItem({
       <>
         <motion.header
           initial={false}
-          animate={{ backgroundColor: expanded ? "#E0E0E0" : "#878787" }}
+          animate={{
+            backgroundColor: expanded ? "#E0E0E0" : "#878787",
+            display: "flex",
+          }}
         >
-          <Text style={styles.title}>{item.name}</Text>
-          {item.artist ? (
-            <Text style={styles.artistName}>{item.artist.name}</Text>
-          ) : (
-            <Text style={styles.artistPlaceholder}>Artist</Text>
+          <View style={styles.header}>
+            <Text style={styles.title}>{item.name}</Text>
+            {item.artist ? (
+              <Text style={styles.artistName}>{item.artist.name}</Text>
+            ) : (
+              <Text style={styles.artistPlaceholder}>Artist</Text>
+            )}
+          </View>
+          {authenticated && (
+            <Pressable
+              onPress={() => isBookmarked ? deleteBookmarkWrapper() : addBookmark(userId, item)}
+              style={styles.button}
+            >
+              <FontAwesome name={isBookmarked ? "star" : "star-o"} size={25} />
+            </Pressable>
           )}
         </motion.header>
         <AnimatePresence initial={false}>
@@ -121,5 +151,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginVertical: 5,
     color: "#666666",
+  },
+  header: {
+    width: "88%",
+    backgroundColor: "transparent",
+  },
+  button: {
+    width: "12%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingRight: 10,
   },
 });

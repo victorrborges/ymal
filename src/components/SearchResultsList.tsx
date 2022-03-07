@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
-import { useSearchResultsContext } from "../hooks/useSearchResultsContext";
+import { useRecommendations } from "../hooks/useRecommendations";
+import { useSearchResults } from "../hooks/useSearchResults";
 import { LastFMSearchObject } from "../types/types";
 import SearchResultsItem from "./SearchResultsItem";
 import { View } from "./Themed";
@@ -11,8 +12,12 @@ export default function SearchResultsList() {
     <SearchResultsItem item={item} />
   );
 
-  const { recommendations } = useRecommendationsContext();
-  const { searchResults } = useSearchResultsContext();
+  const { recommendations, setRecommendations } = useRecommendations();
+  const { searchResults } = useSearchResults();
+
+  useEffect(() => {
+    setRecommendations(undefined);
+  }, [searchResults]);
 
   return (
     <AnimatePresence exitBeforeEnter>

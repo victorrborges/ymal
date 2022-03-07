@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
 import { SearchResultsContent } from "../types/types";
 
-export const MySearchResultsContext = createContext<SearchResultsContent>({
+export const MySearchResults = createContext<SearchResultsContent>({
   searchResults: undefined,
   setSearchResults: () => {},
 });
 
-export const useSearchResultsContext = () => useContext(MySearchResultsContext);
+export const useSearchResults = () => useContext(MySearchResults);

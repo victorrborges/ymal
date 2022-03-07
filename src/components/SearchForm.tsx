@@ -1,22 +1,21 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useForm } from "react-hook-form";
 import { Pressable, StyleSheet, TextInput } from "react-native";
-import { useRecommendationsContext } from "../hooks/useRecommendationsContext";
-import { useSearchResultsContext } from "../hooks/useSearchResultsContext";
+import { useRecommendations } from "../hooks/useRecommendations";
+import { useSearchResults } from "../hooks/useSearchResults";
 import { getSearchResults } from "../services/LastFMAPIProvider";
 import { FormObject } from "../types/types";
 import { Text, View } from "./Themed";
 
 export default function SearchForm() {
   const { setValue, handleSubmit } = useForm();
-  const { setRecommendation, setRecommendations } = useRecommendationsContext();
-  const { setSearchResults } = useSearchResultsContext();
+  const { setRecommendations } = useRecommendations();
+  const { setSearchResults } = useSearchResults();
 
   const onSubmit = (formData: object) => {
     const data = formData as FormObject;
     if (data?.search) {
       setSearchResults(undefined);
-      setRecommendation(undefined);
       setRecommendations(undefined);
       getSearchResults(data.search, setSearchResults);
     }

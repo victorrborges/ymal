@@ -6,11 +6,31 @@ export type SearchResultsContent = {
   setSearchResults: Function;
 };
 
+type FetchedBookmarks = {
+  id: string,
+  creationDate: number,
+  bookmark: RecommendationObject
+}
+
+export type BookmarksContent = {
+  bookmarks?: FetchedBookmarks[]
+};
+
+
+export type AuthenticationContent = {
+  authenticated: boolean;
+  userId?: string;
+  setUserId: Function;
+};
+
+export type RecommendationContent = {
+  recommendation?: RecommendationObject;
+  setRecommendation: Function;
+};
+
 export type RecommendationsContent = {
   recommendations?: RecommendationObject[];
   setRecommendations: Function;
-  recommendation?: RecommendationObject;
-  setRecommendation: Function;
 };
 
 export type FormObject = {
