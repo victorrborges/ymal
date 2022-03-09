@@ -16,12 +16,26 @@ section {
   margin: 20px 0 8px;
 }
 
-.motion-div {
+.search-results-list {
   display: inline-grid;
 }
 
-.motion-div-content {
+.recommendations-list {
   display: flex;
   overflow-y: scroll;
   width: 100%;
+}
+
+.drawer {
+  background-color: #92AB9F;
+  overflow-y: scroll;
+  position: absolute;
+  width: 95%;
+  bottom: 0;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.drawer-background {
+  position: relative;
 }

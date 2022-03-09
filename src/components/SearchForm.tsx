@@ -12,6 +12,11 @@ export default function SearchForm() {
   const { setRecommendations } = useRecommendations();
   const { setSearchResults } = useSearchResults();
 
+  const resetSystem = () => {
+    setRecommendations(undefined),
+    setSearchResults(undefined)
+  };
+
   const onSubmit = (formData: object) => {
     const data = formData as FormObject;
     if (data?.search) {
@@ -23,7 +28,9 @@ export default function SearchForm() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>you like</Text>
+      <Text style={styles.title} onPress={() => resetSystem()}>
+        you like
+      </Text>
 
       <View style={styles.input}>
         <TextInput

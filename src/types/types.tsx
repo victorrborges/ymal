@@ -6,14 +6,16 @@ export type SearchResultsContent = {
   setSearchResults: Function;
 };
 
-type FetchedBookmarks = {
+export type FetchedBookmarks = {
   id: string,
   creationDate: number,
   bookmark: RecommendationObject
 }
 
 export type BookmarksContent = {
-  bookmarks?: FetchedBookmarks[]
+  bookmarks?: FetchedBookmarks[],
+  isDrawerOpen: boolean,
+  setIsDrawerOpen: Function
 };
 
 

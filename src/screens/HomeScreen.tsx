@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
+import Bookmarks from "../components/Bookmarks";
 import RecommendationsList from "../components/RecommendationsList";
-import SearchForm from "../components/SearchForm";
-import SearchResultsList from "../components/SearchResultsList";
+import SearchSection from "../components/SearchSection";
 import SubHeader from "../components/SubHeader";
 import { View } from "../components/Themed";
 import { MyAuthentication } from "../hooks/useAuth";
+import { MyBookmarks } from "../hooks/useBookmarks";
 import { MyRecommendations } from "../hooks/useRecommendations";
 import { MySearchResults } from "../hooks/useSearchResults";
-import { MyBookmarks } from "../hooks/useBookmarks";
-import { RootStackScreenProps } from "../types/types";
 import { auth, getUserId } from "../services/AuthenticationProvider";
 import { getBookmarks } from "../services/BookmarksProvider";
+import { RootStackScreenProps } from "../types/types";
 
 export default function HomeScreen({}: RootStackScreenProps<"Home">) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -21,6 +21,7 @@ export default function HomeScreen({}: RootStackScreenProps<"Home">) {
   const [recommendations, setRecommendations] = useState();
 
   const [bookmarks, setBookmarks] = useState();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     userId && getBookmarks(userId, setBookmarks);
@@ -42,35 +43,35 @@ export default function HomeScreen({}: RootStackScreenProps<"Home">) {
         setUserId,
       }}
     >
-      <MyRecommendations.Provider
+      <MySearchResults.Provider
         value={{
-          recommendations,
-          setRecommendations,
+          searchResults,
+          setSearchResults,
         }}
       >
-        <View style={styles.container}>
-          <MySearchResults.Provider
-            value={{
-              searchResults,
-              setSearchResults,
-            }}
-          >
-            <SearchForm />
-
-            <SearchResultsList />
-          </MySearchResults.Provider>
-
-          <SubHeader />
-
+        <MyRecommendations.Provider
+          value={{
+            recommendations,
+            setRecommendations,
+          }}
+        >
           <MyBookmarks.Provider
             value={{
               bookmarks,
+              isDrawerOpen,
+              setIsDrawerOpen,
             }}
           >
-            <RecommendationsList />
+            <View style={styles.container}>
+              <SearchSection />
+
+              <SubHeader />
+              <RecommendationsList />
+              <Bookmarks />
+            </View>
           </MyBookmarks.Provider>
-        </View>
-      </MyRecommendations.Provider>
+        </MyRecommendations.Provider>
+      </MySearchResults.Provider>
     </MyAuthentication.Provider>
   );
 }

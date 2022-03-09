@@ -16,14 +16,14 @@ export default function SearchResultsList() {
   const { searchResults } = useSearchResults();
 
   useEffect(() => {
-    setRecommendations(undefined);
+    searchResults && setRecommendations(undefined);
   }, [searchResults]);
 
   return (
     <AnimatePresence exitBeforeEnter>
       {!recommendations && searchResults && (
         <motion.div
-          className="motion-div"
+          className="search-results-list"
           key="search-results"
           initial="collapsed"
           animate="open"

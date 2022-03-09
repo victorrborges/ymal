@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   image: {
-    width: "80vw",
+    width: "auto",
     height: "80vw",
     borderRadius: 10,
     marginTop: 5,

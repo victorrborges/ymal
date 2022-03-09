@@ -2,16 +2,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { useRecommendations } from "../hooks/useRecommendations";
+import { useSearchResults } from "../hooks/useSearchResults";
 import { MyRecommendation } from "../hooks/useRecommendation";
 import { RecommendationObject } from "../types/types";
 import RecommendationsItem from "./RecommendationsItem";
 import { View } from "./Themed";
 
 export default function RecommendationsList() {
+  const { setSearchResults } = useSearchResults();
   const { recommendations } = useRecommendations();
   const [recommendation, setRecommendation] = useState();
 
   useEffect(() => setRecommendation(undefined), [recommendations]);
+
+  useEffect(() => {
+    recommendations && setSearchResults(undefined);
+  }, [recommendations]);
 
   const renderItem = ({ item }: { item: RecommendationObject }) => (
     <RecommendationsItem item={item} />
@@ -27,7 +33,7 @@ export default function RecommendationsList() {
       <AnimatePresence exitBeforeEnter>
         {recommendations && (
           <motion.div
-            className="motion-div-content"
+            className="recommendations-list"
             key="recommendations"
             initial="collapsed"
             animate="open"
@@ -77,5 +83,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: "wrap",
     alignContent: "flex-start",
+    backgroundColor: "transparent",
   },
 });
